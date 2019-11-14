@@ -1,0 +1,3 @@
+rootProject.name = 'java-based-code-park'
+include 'socket-communication',
+        'thread-util'

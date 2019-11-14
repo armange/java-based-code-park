@@ -1,0 +1,29 @@
+def armangeVersion = "0.0.1-SNAPSHOT"
+def jerseyVersion = "2.25.1"
+
+ext.library = [
+    // The Apache Software License, Version 2.0
+    com_google_guava_guava: "com.google.guava:guava:23.0",
+    
+    // Apache License 2.0
+    org_jboss_weld_se_weld_se: "org.jboss.weld.se:weld-se:2.3.3.Final",
+    
+    /*
+     * MPL 1.1
+     * LGPL 2.1
+     * Apache License 2.0
+     */
+    org_javassist_javassist: "org.javassist:javassist:3.24.0-GA",
+    
+    // Eclipse Public License 1.0
+    junit_junit: "junit:junit:4.12",
+    
+    // The Apache Software License, Version 2.0
+    org_assertj_assertj_core: "org.assertj:assertj-core:3.12.1",
+    org_hamcrest_hamcrest: "org.hamcrest:hamcrest:2.1",
+    org_mockito_mockito_core: "org.mockito:mockito-core:3.1.0",
+    
+    // Apache License 2.0
+    br_com_armange_codeless_codeless_resource_bundle: "br.com.armange.codeless:codeless-resource-bundle:$armangeVersion",
+    br_com_armange_codeless_codeless_core: "br.com.armange.codeless:codeless-core:$armangeVersion"
+]

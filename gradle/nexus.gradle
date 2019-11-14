@@ -1,0 +1,11 @@
+extraArchive {
+    sources = false
+    tests = true
+    javadoc = false
+}
+
+nexus {
+     sign = false
+     repositoryUrl = 'http://ec2-3-88-53-154.compute-1.amazonaws.com:8081/nexus/content/repositories/releases/'
+     snapshotRepositoryUrl = 'http://ec2-3-88-53-154.compute-1.amazonaws.com:8081/nexus/content/repositories/snapshots/'
+}
