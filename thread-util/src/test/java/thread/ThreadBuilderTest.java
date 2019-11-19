@@ -1,12 +1,18 @@
 package thread;
 
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+/**
+ * @author Diego Armange Costa
+ * @since 2019-11-18 V1.0.0 (JDK 1.8)
+ */
 public class ThreadBuilderTest {
     private static final RuntimeException RUNTIME_EXCEPTION = new RuntimeException();
     
@@ -37,7 +43,14 @@ public class ThreadBuilderTest {
     private static class ThrowableConsumer implements Consumer<Throwable> {
         @Override
         public void accept(final Throwable t) {
-            t.printStackTrace();
+            System.out.println("Exception tested successfull: " + t);
+        }
+    }
+    
+    private static class AfterExecuteConsumer implements BiConsumer<Runnable, Throwable> {
+        @Override
+        public void accept(final Runnable t, final Throwable u) {
+            System.out.println("After-Execute consumer tested successfull.");
         }
     }
     
@@ -45,6 +58,7 @@ public class ThreadBuilderTest {
     private LocalRunnableWithException localRunnableWithException = Mockito.spy(new LocalRunnableWithException());
     private LazyRunnableWithException lazyRunnableWithException = Mockito.spy(new LazyRunnableWithException());
     private ThrowableConsumer throwableConsumer = Mockito.spy(new ThrowableConsumer());
+    private AfterExecuteConsumer afterExecuteConsumer = Mockito.spy(new AfterExecuteConsumer());
     
     @Before
     public void beforeTests() {
@@ -52,6 +66,7 @@ public class ThreadBuilderTest {
         Mockito.reset(localRunnableWithException);
         Mockito.reset(throwableConsumer);
         Mockito.reset(lazyRunnableWithException);
+        Mockito.reset(afterExecuteConsumer);
     }
     
     @Test
@@ -71,6 +86,7 @@ public class ThreadBuilderTest {
         ThreadBuilder
             .newBuilder()
             .setExecution(localRunnableWithException)
+            .setSilentInterruption(true)
             .setUncaughtExceptionConsumer(throwableConsumer)
             .start();
         
@@ -88,7 +104,7 @@ public class ThreadBuilderTest {
             .setExecution(localRunnable)
             .start();
         
-        ThreadUtil.sleepUnchecked(2000);
+        ThreadUtil.sleepUnchecked(1000);
         
         Mockito.verify(localRunnable, Mockito.times(0)).run();
         
@@ -103,10 +119,11 @@ public class ThreadBuilderTest {
             .newBuilder()
             .setDelay(2000)
             .setExecution(localRunnableWithException)
+            .setSilentInterruption(true)
             .setUncaughtExceptionConsumer(throwableConsumer)
             .start();
         
-        ThreadUtil.sleepUnchecked(2000);
+        ThreadUtil.sleepUnchecked(1000);
         
         Mockito.verify(localRunnableWithException, Mockito.times(0)).run();
         
@@ -122,6 +139,7 @@ public class ThreadBuilderTest {
             .newBuilder()
             .setTimeout(1000)
             .setMayInterruptIfRunning(true)
+            .setSilentInterruption(true)
             .setExecution(() -> {
                     ThreadUtil.sleepUnchecked(2000);
                     localRunnable.run();
@@ -143,6 +161,7 @@ public class ThreadBuilderTest {
             .newBuilder()
             .setTimeout(3000)
             .setMayInterruptIfRunning(true)
+            .setSilentInterruption(true)
             .setExecution(localRunnable)
             .start();
         
@@ -157,6 +176,7 @@ public class ThreadBuilderTest {
             .newBuilder()
             .setTimeout(3000)
             .setMayInterruptIfRunning(true)
+            .setSilentInterruption(true)
             .setUncaughtExceptionConsumer(throwableConsumer)
             .setExecution(localRunnableWithException)
             .start();
@@ -172,10 +192,11 @@ public class ThreadBuilderTest {
         final ExecutorService thread = ThreadBuilder
             .newBuilder()
             .setInterval(1000)
+            .setSilentInterruption(true)
             .setExecution(localRunnable)
             .start();
         
-        ThreadUtil.sleepUnchecked(1500);
+        ThreadUtil.sleepUnchecked(500);
         
         Mockito.verify(localRunnable, Mockito.times(1)).run();
         
@@ -197,6 +218,7 @@ public class ThreadBuilderTest {
             .setInterval(1000)
             .setUncaughtExceptionConsumer(throwableConsumer)
             .setExecution(lazyRunnableWithException)
+            .setSilentInterruption(true)
             .start();
         
         ThreadUtil.sleepUnchecked(1500);
@@ -221,9 +243,10 @@ public class ThreadBuilderTest {
             .setDelay(1000)
             .setInterval(1000)
             .setExecution(localRunnable)
+            .setSilentInterruption(true)
             .start();
         
-        ThreadUtil.sleepUnchecked(2500);
+        ThreadUtil.sleepUnchecked(1500);
         
         Mockito.verify(localRunnable, Mockito.times(1)).run();
         
@@ -246,6 +269,7 @@ public class ThreadBuilderTest {
             .setInterval(1000)
             .setUncaughtExceptionConsumer(throwableConsumer)
             .setExecution(localRunnableWithException)
+            .setSilentInterruption(true)
             .start();
         
         ThreadUtil.sleepUnchecked(2500);
@@ -265,10 +289,11 @@ public class ThreadBuilderTest {
             .setTimeout(3000)
             .setInterval(1000)
             .setMayInterruptIfRunning(true)
+            .setSilentInterruption(true)
             .setExecution(localRunnable)
             .start();
         
-        ThreadUtil.sleepUnchecked(1500);
+        ThreadUtil.sleepUnchecked(500);
         
         Mockito.verify(localRunnable, Mockito.times(1)).run();
         
@@ -293,6 +318,7 @@ public class ThreadBuilderTest {
                     ThreadUtil.sleepUnchecked(4000);
                     localRunnable.run();
                 })
+            .setSilentInterruption(true)
             .start();
         
         ThreadUtil.sleepUnchecked(1000);
@@ -312,6 +338,7 @@ public class ThreadBuilderTest {
             .setInterval(1000)
             .setUncaughtExceptionConsumer(throwableConsumer)
             .setMayInterruptIfRunning(true)
+            .setSilentInterruption(true)
             .setExecution(localRunnableWithException)
             .start();
         
@@ -326,6 +353,29 @@ public class ThreadBuilderTest {
     }
     
     @Test
+    public void useAllDelayAndTimeout() {
+        ThreadBuilder
+            .newBuilder()
+            .setDelay(1000)
+            .setTimeout(2000)
+            .setMayInterruptIfRunning(true)
+            .setExecution(localRunnable)
+            .start();
+        
+        ThreadUtil.sleepUnchecked(500);
+        
+        Mockito.verify(localRunnable, Mockito.times(0)).run();
+        
+        ThreadUtil.sleepUnchecked(500);
+        
+        Mockito.verify(localRunnable, Mockito.times(1)).run();
+        
+        ThreadUtil.sleepUnchecked(1100);
+        
+        Mockito.verify(localRunnable, Mockito.times(1)).run();
+    }
+    
+    @Test
     public void useAllTimeControlsAndCaughtException() {
         ThreadBuilder
             .newBuilder()
@@ -334,6 +384,7 @@ public class ThreadBuilderTest {
             .setInterval(1000)
             .setUncaughtExceptionConsumer(throwableConsumer)
             .setMayInterruptIfRunning(true)
+            .setSilentInterruption(true)
             .setExecution(localRunnableWithException)
             .start();
         
@@ -356,20 +407,83 @@ public class ThreadBuilderTest {
             .setInterval(1000)
             .setUncaughtExceptionConsumer(throwableConsumer)
             .setMayInterruptIfRunning(true)
-            .setExecution(localRunnableWithException)
+            .setSilentInterruption(true)
+            .setExecution(localRunnable)
             .start();
         
-        ThreadUtil.sleepUnchecked(2500);
+        ThreadUtil.sleepUnchecked(1500);
         
-        Mockito.verify(localRunnableWithException, Mockito.times(1)).run();
+        Mockito.verify(localRunnable, Mockito.times(1)).run();
         
         ThreadUtil.sleepUnchecked(1000);
         
-        Mockito.verify(localRunnableWithException, Mockito.times(2)).run();
+        Mockito.verify(localRunnable, Mockito.times(2)).run();
         
         thread.shutdownNow();
         
         ThreadUtil.sleepUnchecked(1000);
-        Mockito.verify(localRunnableWithException, Mockito.times(2)).run();
+        Mockito.verify(localRunnable, Mockito.times(2)).run();
+    }
+    
+    @Test
+    public void silentCancellationException() {
+        final ExecutorService thread = ThreadBuilder
+            .newBuilder(new ScheduledCaughtExecutorService(2))
+            .setDelay(5000)
+            .setExecution(localRunnableWithException)
+            .setUncaughtExceptionConsumer(throwableConsumer)
+            .setSilentInterruption(true)
+            .start();
+        
+        thread.shutdownNow();
+        
+        Mockito.verify(localRunnableWithException, Mockito.times(0)).run();
+        Mockito.verify(throwableConsumer, Mockito.times(0)).accept(Mockito.any());
+    }
+    
+    @Test
+    public void throwingInterruptedException() {
+        final ExecutorService thread = ThreadBuilder
+            .newBuilder(new ScheduledCaughtExecutorService(2))
+            .setExecution(() -> ThreadUtil.sleepUnchecked(5000))
+            .setUncaughtExceptionConsumer(throwableConsumer)
+            .start();
+        
+        ThreadUtil.sleepUnchecked(1100);
+        
+        thread.shutdownNow();
+        
+        ThreadUtil.sleepUnchecked(1000);
+        
+        Mockito.verify(localRunnableWithException, Mockito.times(0)).run();
+        Mockito.verify(throwableConsumer, Mockito.times(1)).accept(Mockito.any());
+    }
+    
+    @Test
+    public void throwingCancellationException() {
+        ThreadBuilder
+            .newBuilder()
+            .setExecution(() -> ThreadUtil.sleepUnchecked(5000))
+            .setTimeout(1000)
+            .setUncaughtExceptionConsumer(throwableConsumer)
+            .start();
+        
+        ThreadUtil.sleepUnchecked(1100);
+        
+        Mockito.verify(throwableConsumer, Mockito.times(1)).accept(Mockito.any());
+    }
+    
+    @Test
+    public void callingAfterExecutionConsumer() {
+        ThreadBuilder
+            .newBuilder()
+            .setExecution(localRunnable)
+            .setAfterExecuteConsumer(afterExecuteConsumer)
+            .start();
+        
+        ThreadUtil.sleepUnchecked(1100);
+        
+        Mockito.verify(localRunnable, Mockito.times(1)).run();
+        Mockito.verify(afterExecuteConsumer, Mockito.times(1)).accept(Mockito.any(), Mockito.any());
     }
 }
