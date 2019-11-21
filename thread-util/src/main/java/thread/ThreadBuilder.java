@@ -289,7 +289,7 @@ public class ThreadBuilder {
         final Future<?> future = executor.schedule(execution, handleDelay(), TimeUnit.MILLISECONDS);
 
         executor.addAfterExecuteConsumer(handleException(future));
-        executorResult = new ExecutorResult(executor);
+        newExecutorResultIfNull();
         executorResult.getFutures().add(future);
     }
 
@@ -297,7 +297,7 @@ public class ThreadBuilder {
         final ScheduledFuture<?> future = executor.schedule(execution, handleDelay(), TimeUnit.MILLISECONDS);
 
         executor.addAfterExecuteConsumer(handleException(future));
-        executorResult = new ExecutorResult(executor);
+        newExecutorResultIfNull();
         executorResult.getFutures().add(future);
     }
 
@@ -308,8 +308,9 @@ public class ThreadBuilder {
 
         final ExecutorResult timeoutExecutorResult = handleInterruption(future);
         
-        executorResult = new ExecutorResult(executor, timeoutExecutorResult);
+        newExecutorResultIfNull();
         executorResult.getFutures().add(future);
+        executorResult.getTimeoutExecutorResults().add(timeoutExecutorResult);
     }
 
     private void repeatWithInterval() {
@@ -317,7 +318,7 @@ public class ThreadBuilder {
                 interval.get().toMillis(), TimeUnit.MILLISECONDS);
 
         executor.addAfterExecuteConsumer(handleException(future));
-        executorResult = new ExecutorResult(executor);
+        newExecutorResultIfNull();
         executorResult.getFutures().add(future);
     }
 
@@ -328,8 +329,9 @@ public class ThreadBuilder {
 
         final ExecutorResult timeoutExecutorResult = handleInterruption(future);
         
-        executorResult = new ExecutorResult(executor, timeoutExecutorResult);
+        newExecutorResultIfNull();
         executorResult.getFutures().add(future);
+        executorResult.getTimeoutExecutorResults().add(timeoutExecutorResult);
     }
 
     private void runWithDelayAndInterval() {
@@ -337,8 +339,12 @@ public class ThreadBuilder {
                 interval.get().toMillis(), TimeUnit.MILLISECONDS);
 
         executor.addAfterExecuteConsumer(handleException(future));
-        executorResult = new ExecutorResult(executor);
+        newExecutorResultIfNull();
         executorResult.getFutures().add(future);
+    }
+    
+    private void newExecutorResultIfNull() {
+        executorResult = executorResult == null ? new ExecutorResult(executor) : executorResult;
     }
 
     private void runWithTimeoutAndInterval() {
@@ -349,8 +355,9 @@ public class ThreadBuilder {
 
         final ExecutorResult timeoutExecutorResult = handleInterruption(future);
         
-        executorResult = new ExecutorResult(executor, timeoutExecutorResult);
+        newExecutorResultIfNull();
         executorResult.getFutures().add(future);
+        executorResult.getTimeoutExecutorResults().add(timeoutExecutorResult);
     }
 
     private void runWithAllTimesControls() {
@@ -361,8 +368,9 @@ public class ThreadBuilder {
 
         final ExecutorResult timeoutExecutorResult = handleInterruption(future);
         
-        executorResult = new ExecutorResult(executor, timeoutExecutorResult);
+        newExecutorResultIfNull();
         executorResult.getFutures().add(future);
+        executorResult.getTimeoutExecutorResults().add(timeoutExecutorResult);
     }
 
     private long handleDelay() {
@@ -396,12 +404,16 @@ public class ThreadBuilder {
         final ScheduledCaughtExecutorService executor = new ScheduledCaughtExecutorService(1);
         
         executor.addAfterExecuteConsumer(handleException(future));
-        executor.schedule(() -> future.cancel(mayInterruptIfRunning), timeout.get().toMillis(), TimeUnit.MILLISECONDS);
+        executor.schedule(cancelFuture(future), timeout.get().toMillis(), TimeUnit.MILLISECONDS);
         
         final ExecutorResult timeoutExecutorResult = new ExecutorResult(executor);
         
         timeoutExecutorResult.getFutures().add(future);
         
         return timeoutExecutorResult;
+    }
+
+    private Runnable cancelFuture(final ScheduledFuture<?> future) {
+        return () -> {if(!future.isDone() && !future.isCancelled()) future.cancel(mayInterruptIfRunning);};
     }
 }

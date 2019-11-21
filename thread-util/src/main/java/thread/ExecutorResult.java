@@ -9,16 +9,10 @@ public class ExecutorResult {
 
     private final ExecutorService executorService;
     private final List<Future<?>> futures = new LinkedList<Future<?>>();
-    private final ExecutorResult timeoutExecutorResult;
+    private final List<ExecutorResult> timeoutExecutorResults = new LinkedList<>();
     
     public ExecutorResult(final ExecutorService executorService) {
         this.executorService = executorService;
-        timeoutExecutorResult = null;
-    }
-    
-    public ExecutorResult(final ExecutorService executorService, final ExecutorResult timeoutExecutorResult) {
-        this.executorService = executorService;
-        this.timeoutExecutorResult = timeoutExecutorResult;
     }
     
     public ExecutorService getExecutorService() {
@@ -29,7 +23,7 @@ public class ExecutorResult {
         return futures;
     }
     
-    public ExecutorResult getTimeoutExecutorResult() {
-        return timeoutExecutorResult;
+    public List<ExecutorResult> getTimeoutExecutorResults() {
+        return timeoutExecutorResults;
     }
 }

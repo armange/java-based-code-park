@@ -81,7 +81,7 @@ public class ThreadBuilderTest {
         Mockito.verify(localRunnable, Mockito.times(1)).run();
         Assert.assertThat(result, Matchers.hasProperty("executorService", Matchers.notNullValue()));
         Assert.assertThat(result, Matchers.hasProperty("futures", Matchers.hasSize(1)));
-        Assert.assertThat(result, Matchers.hasProperty("timeoutExecutorResult", Matchers.nullValue()));
+        Assert.assertThat(result, Matchers.hasProperty("timeoutExecutorResults", Matchers.hasSize(0)));
     }
     
     @Test
@@ -99,7 +99,7 @@ public class ThreadBuilderTest {
         Mockito.verify(throwableConsumer, Mockito.times(1)).accept(Mockito.any());
         Assert.assertThat(result, Matchers.hasProperty("executorService", Matchers.notNullValue()));
         Assert.assertThat(result, Matchers.hasProperty("futures", Matchers.hasSize(1)));
-        Assert.assertThat(result, Matchers.hasProperty("timeoutExecutorResult", Matchers.nullValue()));
+        Assert.assertThat(result, Matchers.hasProperty("timeoutExecutorResults", Matchers.hasSize(0)));
     }
     
     @Test
@@ -119,7 +119,7 @@ public class ThreadBuilderTest {
         Mockito.verify(localRunnable, Mockito.times(1)).run();
         Assert.assertThat(result, Matchers.hasProperty("executorService", Matchers.notNullValue()));
         Assert.assertThat(result, Matchers.hasProperty("futures", Matchers.hasSize(1)));
-        Assert.assertThat(result, Matchers.hasProperty("timeoutExecutorResult", Matchers.nullValue()));
+        Assert.assertThat(result, Matchers.hasProperty("timeoutExecutorResults", Matchers.hasSize(0)));
     }
     
     @Test
@@ -142,7 +142,7 @@ public class ThreadBuilderTest {
         Mockito.verify(throwableConsumer, Mockito.times(1)).accept(Mockito.any());
         Assert.assertThat(result, Matchers.hasProperty("executorService", Matchers.notNullValue()));
         Assert.assertThat(result, Matchers.hasProperty("futures", Matchers.hasSize(1)));
-        Assert.assertThat(result, Matchers.hasProperty("timeoutExecutorResult", Matchers.nullValue()));
+        Assert.assertThat(result, Matchers.hasProperty("timeoutExecutorResults", Matchers.hasSize(0)));
     }
     
     @Test
@@ -167,11 +167,15 @@ public class ThreadBuilderTest {
         Mockito.verify(localRunnable, Mockito.times(0)).run();
         Assert.assertThat(result, Matchers.hasProperty("executorService", Matchers.notNullValue()));
         Assert.assertThat(result, Matchers.hasProperty("futures", Matchers.hasSize(1)));
-        Assert.assertThat(result, Matchers.hasProperty("timeoutExecutorResult", Matchers.notNullValue()));
+        Assert.assertThat(result, Matchers.hasProperty("timeoutExecutorResults", Matchers.hasSize(1)));
         Assert.assertThat(
-                result.getTimeoutExecutorResult(), 
-                Matchers.hasProperty("executorService", Matchers.notNullValue()));
-        Assert.assertThat(result.getTimeoutExecutorResult(), Matchers.hasProperty("futures", Matchers.hasSize(1)));
+                result.getTimeoutExecutorResults(),
+                Matchers.allOf(
+                        Matchers.hasSize(1),
+                        Matchers.hasItem(Matchers.hasProperty("executorService", Matchers.notNullValue()))));
+        Assert.assertThat(result.getTimeoutExecutorResults(),
+                Matchers.hasItem(
+                        Matchers.hasProperty("futures", Matchers.hasSize(1))));
     }
     
     @Test
@@ -189,11 +193,15 @@ public class ThreadBuilderTest {
         Mockito.verify(localRunnable, Mockito.times(1)).run();
         Assert.assertThat(result, Matchers.hasProperty("executorService", Matchers.notNullValue()));
         Assert.assertThat(result, Matchers.hasProperty("futures", Matchers.hasSize(1)));
-        Assert.assertThat(result, Matchers.hasProperty("timeoutExecutorResult", Matchers.notNullValue()));
+        Assert.assertThat(result, Matchers.hasProperty("timeoutExecutorResults", Matchers.hasSize(1)));
         Assert.assertThat(
-                result.getTimeoutExecutorResult(), 
-                Matchers.hasProperty("executorService", Matchers.notNullValue()));
-        Assert.assertThat(result.getTimeoutExecutorResult(), Matchers.hasProperty("futures", Matchers.hasSize(1)));
+                result.getTimeoutExecutorResults(),
+                Matchers.allOf(
+                        Matchers.hasSize(1),
+                        Matchers.hasItem(Matchers.hasProperty("executorService", Matchers.notNullValue()))));
+        Assert.assertThat(result.getTimeoutExecutorResults(),
+                Matchers.hasItem(
+                        Matchers.hasProperty("futures", Matchers.hasSize(1))));
     }
     
     @Test
@@ -213,11 +221,15 @@ public class ThreadBuilderTest {
         Mockito.verify(throwableConsumer, Mockito.times(1)).accept(Mockito.any());
         Assert.assertThat(result, Matchers.hasProperty("executorService", Matchers.notNullValue()));
         Assert.assertThat(result, Matchers.hasProperty("futures", Matchers.hasSize(1)));
-        Assert.assertThat(result, Matchers.hasProperty("timeoutExecutorResult", Matchers.notNullValue()));
+        Assert.assertThat(result, Matchers.hasProperty("timeoutExecutorResults", Matchers.hasSize(1)));
         Assert.assertThat(
-                result.getTimeoutExecutorResult(), 
-                Matchers.hasProperty("executorService", Matchers.notNullValue()));
-        Assert.assertThat(result.getTimeoutExecutorResult(), Matchers.hasProperty("futures", Matchers.hasSize(1)));
+                result.getTimeoutExecutorResults(),
+                Matchers.allOf(
+                        Matchers.hasSize(1),
+                        Matchers.hasItem(Matchers.hasProperty("executorService", Matchers.notNullValue()))));
+        Assert.assertThat(result.getTimeoutExecutorResults(),
+                Matchers.hasItem(
+                        Matchers.hasProperty("futures", Matchers.hasSize(1))));
     }
     
     @Test
@@ -244,7 +256,7 @@ public class ThreadBuilderTest {
         Mockito.verify(localRunnable, Mockito.times(2)).run();
         Assert.assertThat(result, Matchers.hasProperty("executorService", Matchers.notNullValue()));
         Assert.assertThat(result, Matchers.hasProperty("futures", Matchers.hasSize(1)));
-        Assert.assertThat(result, Matchers.hasProperty("timeoutExecutorResult", Matchers.nullValue()));
+        Assert.assertThat(result, Matchers.hasProperty("timeoutExecutorResults", Matchers.hasSize(0)));
     }
     
     @Test
@@ -272,7 +284,7 @@ public class ThreadBuilderTest {
         Mockito.verify(throwableConsumer, Mockito.times(1)).accept(Mockito.any());
         Assert.assertThat(result, Matchers.hasProperty("executorService", Matchers.notNullValue()));
         Assert.assertThat(result, Matchers.hasProperty("futures", Matchers.hasSize(1)));
-        Assert.assertThat(result, Matchers.hasProperty("timeoutExecutorResult", Matchers.nullValue()));
+        Assert.assertThat(result, Matchers.hasProperty("timeoutExecutorResults", Matchers.hasSize(0)));
     }
     
     @Test
@@ -300,7 +312,7 @@ public class ThreadBuilderTest {
         Mockito.verify(localRunnable, Mockito.times(2)).run();
         Assert.assertThat(result, Matchers.hasProperty("executorService", Matchers.notNullValue()));
         Assert.assertThat(result, Matchers.hasProperty("futures", Matchers.hasSize(1)));
-        Assert.assertThat(result, Matchers.hasProperty("timeoutExecutorResult", Matchers.nullValue()));
+        Assert.assertThat(result, Matchers.hasProperty("timeoutExecutorResults", Matchers.hasSize(0)));
     }
     
     @Test
@@ -324,7 +336,7 @@ public class ThreadBuilderTest {
         Mockito.verify(throwableConsumer, Mockito.times(1)).accept(Mockito.any());
         Assert.assertThat(result, Matchers.hasProperty("executorService", Matchers.notNullValue()));
         Assert.assertThat(result, Matchers.hasProperty("futures", Matchers.hasSize(1)));
-        Assert.assertThat(result, Matchers.hasProperty("timeoutExecutorResult", Matchers.nullValue()));
+        Assert.assertThat(result, Matchers.hasProperty("timeoutExecutorResults", Matchers.hasSize(0)));
     }
     
     @Test
@@ -352,11 +364,15 @@ public class ThreadBuilderTest {
         Mockito.verify(localRunnable, Mockito.times(2)).run();
         Assert.assertThat(result, Matchers.hasProperty("executorService", Matchers.notNullValue()));
         Assert.assertThat(result, Matchers.hasProperty("futures", Matchers.hasSize(1)));
-        Assert.assertThat(result, Matchers.hasProperty("timeoutExecutorResult", Matchers.notNullValue()));
+        Assert.assertThat(result, Matchers.hasProperty("timeoutExecutorResults", Matchers.hasSize(1)));
         Assert.assertThat(
-                result.getTimeoutExecutorResult(), 
-                Matchers.hasProperty("executorService", Matchers.notNullValue()));
-        Assert.assertThat(result.getTimeoutExecutorResult(), Matchers.hasProperty("futures", Matchers.hasSize(1)));
+                result.getTimeoutExecutorResults(),
+                Matchers.allOf(
+                        Matchers.hasSize(1),
+                        Matchers.hasItem(Matchers.hasProperty("executorService", Matchers.notNullValue()))));
+        Assert.assertThat(result.getTimeoutExecutorResults(),
+                Matchers.hasItem(
+                        Matchers.hasProperty("futures", Matchers.hasSize(1))));
     }
     
     @Test
@@ -382,11 +398,15 @@ public class ThreadBuilderTest {
         Mockito.verify(localRunnable, Mockito.times(0)).run();
         Assert.assertThat(result, Matchers.hasProperty("executorService", Matchers.notNullValue()));
         Assert.assertThat(result, Matchers.hasProperty("futures", Matchers.hasSize(1)));
-        Assert.assertThat(result, Matchers.hasProperty("timeoutExecutorResult", Matchers.notNullValue()));
+        Assert.assertThat(result, Matchers.hasProperty("timeoutExecutorResults", Matchers.hasSize(1)));
         Assert.assertThat(
-                result.getTimeoutExecutorResult(), 
-                Matchers.hasProperty("executorService", Matchers.notNullValue()));
-        Assert.assertThat(result.getTimeoutExecutorResult(), Matchers.hasProperty("futures", Matchers.hasSize(1)));
+                result.getTimeoutExecutorResults(),
+                Matchers.allOf(
+                        Matchers.hasSize(1),
+                        Matchers.hasItem(Matchers.hasProperty("executorService", Matchers.notNullValue()))));
+        Assert.assertThat(result.getTimeoutExecutorResults(),
+                Matchers.hasItem(
+                        Matchers.hasProperty("futures", Matchers.hasSize(1))));
     }
     
     @Test
@@ -411,11 +431,15 @@ public class ThreadBuilderTest {
         Mockito.verify(throwableConsumer, Mockito.times(1)).accept(Mockito.any());
         Assert.assertThat(result, Matchers.hasProperty("executorService", Matchers.notNullValue()));
         Assert.assertThat(result, Matchers.hasProperty("futures", Matchers.hasSize(1)));
-        Assert.assertThat(result, Matchers.hasProperty("timeoutExecutorResult", Matchers.notNullValue()));
+        Assert.assertThat(result, Matchers.hasProperty("timeoutExecutorResults", Matchers.hasSize(1)));
         Assert.assertThat(
-                result.getTimeoutExecutorResult(), 
-                Matchers.hasProperty("executorService", Matchers.notNullValue()));
-        Assert.assertThat(result.getTimeoutExecutorResult(), Matchers.hasProperty("futures", Matchers.hasSize(1)));
+                result.getTimeoutExecutorResults(),
+                Matchers.allOf(
+                        Matchers.hasSize(1),
+                        Matchers.hasItem(Matchers.hasProperty("executorService", Matchers.notNullValue()))));
+        Assert.assertThat(result.getTimeoutExecutorResults(),
+                Matchers.hasItem(
+                        Matchers.hasProperty("futures", Matchers.hasSize(1))));
     }
     
     @Test
@@ -432,7 +456,7 @@ public class ThreadBuilderTest {
         
         Mockito.verify(localRunnable, Mockito.times(0)).run();
         
-        ThreadUtil.sleepUnchecked(500);
+        ThreadUtil.sleepUnchecked(600);
         
         Mockito.verify(localRunnable, Mockito.times(1)).run();
         
@@ -441,11 +465,15 @@ public class ThreadBuilderTest {
         Mockito.verify(localRunnable, Mockito.times(1)).run();
         Assert.assertThat(result, Matchers.hasProperty("executorService", Matchers.notNullValue()));
         Assert.assertThat(result, Matchers.hasProperty("futures", Matchers.hasSize(1)));
-        Assert.assertThat(result, Matchers.hasProperty("timeoutExecutorResult", Matchers.notNullValue()));
+        Assert.assertThat(result, Matchers.hasProperty("timeoutExecutorResults", Matchers.hasSize(1)));
         Assert.assertThat(
-                result.getTimeoutExecutorResult(), 
-                Matchers.hasProperty("executorService", Matchers.notNullValue()));
-        Assert.assertThat(result.getTimeoutExecutorResult(), Matchers.hasProperty("futures", Matchers.hasSize(1)));
+                result.getTimeoutExecutorResults(),
+                Matchers.allOf(
+                        Matchers.hasSize(1),
+                        Matchers.hasItem(Matchers.hasProperty("executorService", Matchers.notNullValue()))));
+        Assert.assertThat(result.getTimeoutExecutorResults(),
+                Matchers.hasItem(
+                        Matchers.hasProperty("futures", Matchers.hasSize(1))));
     }
     
     @Test
@@ -471,11 +499,15 @@ public class ThreadBuilderTest {
         Mockito.verify(throwableConsumer, Mockito.times(1)).accept(Mockito.any());
         Assert.assertThat(result, Matchers.hasProperty("executorService", Matchers.notNullValue()));
         Assert.assertThat(result, Matchers.hasProperty("futures", Matchers.hasSize(1)));
-        Assert.assertThat(result, Matchers.hasProperty("timeoutExecutorResult", Matchers.notNullValue()));
+        Assert.assertThat(result, Matchers.hasProperty("timeoutExecutorResults", Matchers.hasSize(1)));
         Assert.assertThat(
-                result.getTimeoutExecutorResult(), 
-                Matchers.hasProperty("executorService", Matchers.notNullValue()));
-        Assert.assertThat(result.getTimeoutExecutorResult(), Matchers.hasProperty("futures", Matchers.hasSize(1)));
+                result.getTimeoutExecutorResults(),
+                Matchers.allOf(
+                        Matchers.hasSize(1),
+                        Matchers.hasItem(Matchers.hasProperty("executorService", Matchers.notNullValue()))));
+        Assert.assertThat(result.getTimeoutExecutorResults(),
+                Matchers.hasItem(
+                        Matchers.hasProperty("futures", Matchers.hasSize(1))));
     }
     
     @Test
@@ -505,11 +537,15 @@ public class ThreadBuilderTest {
         Mockito.verify(localRunnable, Mockito.times(2)).run();
         Assert.assertThat(result, Matchers.hasProperty("executorService", Matchers.notNullValue()));
         Assert.assertThat(result, Matchers.hasProperty("futures", Matchers.hasSize(1)));
-        Assert.assertThat(result, Matchers.hasProperty("timeoutExecutorResult", Matchers.notNullValue()));
+        Assert.assertThat(result, Matchers.hasProperty("timeoutExecutorResults", Matchers.hasSize(1)));
         Assert.assertThat(
-                result.getTimeoutExecutorResult(), 
-                Matchers.hasProperty("executorService", Matchers.notNullValue()));
-        Assert.assertThat(result.getTimeoutExecutorResult(), Matchers.hasProperty("futures", Matchers.hasSize(1)));
+                result.getTimeoutExecutorResults(),
+                Matchers.allOf(
+                        Matchers.hasSize(1),
+                        Matchers.hasItem(Matchers.hasProperty("executorService", Matchers.notNullValue()))));
+        Assert.assertThat(result.getTimeoutExecutorResults(),
+                Matchers.hasItem(
+                        Matchers.hasProperty("futures", Matchers.hasSize(1))));
     }
     
     @Test
@@ -528,7 +564,7 @@ public class ThreadBuilderTest {
         Mockito.verify(throwableConsumer, Mockito.times(0)).accept(Mockito.any());
         Assert.assertThat(result, Matchers.hasProperty("executorService", Matchers.notNullValue()));
         Assert.assertThat(result, Matchers.hasProperty("futures", Matchers.hasSize(1)));
-        Assert.assertThat(result, Matchers.hasProperty("timeoutExecutorResult", Matchers.nullValue()));
+        Assert.assertThat(result, Matchers.hasProperty("timeoutExecutorResults", Matchers.hasSize(0)));
     }
     
     @Test
@@ -549,7 +585,7 @@ public class ThreadBuilderTest {
         Mockito.verify(throwableConsumer, Mockito.times(1)).accept(Mockito.any());
         Assert.assertThat(result, Matchers.hasProperty("executorService", Matchers.notNullValue()));
         Assert.assertThat(result, Matchers.hasProperty("futures", Matchers.hasSize(1)));
-        Assert.assertThat(result, Matchers.hasProperty("timeoutExecutorResult", Matchers.nullValue()));
+        Assert.assertThat(result, Matchers.hasProperty("timeoutExecutorResults", Matchers.hasSize(0)));
     }
     
     @Test
@@ -566,11 +602,15 @@ public class ThreadBuilderTest {
         Mockito.verify(throwableConsumer, Mockito.times(1)).accept(Mockito.any());
         Assert.assertThat(result, Matchers.hasProperty("executorService", Matchers.notNullValue()));
         Assert.assertThat(result, Matchers.hasProperty("futures", Matchers.hasSize(1)));
-        Assert.assertThat(result, Matchers.hasProperty("timeoutExecutorResult", Matchers.notNullValue()));
+        Assert.assertThat(result, Matchers.hasProperty("timeoutExecutorResults", Matchers.hasSize(1)));
         Assert.assertThat(
-                result.getTimeoutExecutorResult(), 
-                Matchers.hasProperty("executorService", Matchers.notNullValue()));
-        Assert.assertThat(result.getTimeoutExecutorResult(), Matchers.hasProperty("futures", Matchers.hasSize(1)));
+                result.getTimeoutExecutorResults(),
+                Matchers.allOf(
+                        Matchers.hasSize(1),
+                        Matchers.hasItem(Matchers.hasProperty("executorService", Matchers.notNullValue()))));
+        Assert.assertThat(result.getTimeoutExecutorResults(),
+                Matchers.hasItem(
+                        Matchers.hasProperty("futures", Matchers.hasSize(1))));
     }
     
     @Test
@@ -587,7 +627,7 @@ public class ThreadBuilderTest {
         Mockito.verify(afterExecuteConsumer, Mockito.times(1)).accept(Mockito.any(), Mockito.any());
         Assert.assertThat(result, Matchers.hasProperty("executorService", Matchers.notNullValue()));
         Assert.assertThat(result, Matchers.hasProperty("futures", Matchers.hasSize(1)));
-        Assert.assertThat(result, Matchers.hasProperty("timeoutExecutorResult", Matchers.nullValue()));
+        Assert.assertThat(result, Matchers.hasProperty("timeoutExecutorResults", Matchers.hasSize(0)));
     }
     
     @Test
@@ -610,19 +650,25 @@ public class ThreadBuilderTest {
         Mockito.verify(localRunnable, Mockito.atMost(7)).run();
         Assert.assertThat(result, Matchers.hasProperty("executorService", Matchers.notNullValue()));
         Assert.assertThat(result, Matchers.hasProperty("futures", Matchers.hasSize(1)));
-        Assert.assertThat(result, Matchers.hasProperty("timeoutExecutorResult", Matchers.notNullValue()));
+        Assert.assertThat(result, Matchers.hasProperty("timeoutExecutorResults", Matchers.hasSize(1)));
         Assert.assertThat(
-                result.getTimeoutExecutorResult(), 
-                Matchers.hasProperty("executorService", Matchers.notNullValue()));
-        Assert.assertThat(result.getTimeoutExecutorResult(), Matchers.hasProperty("futures", Matchers.hasSize(1)));
+                result.getTimeoutExecutorResults(),
+                Matchers.allOf(
+                        Matchers.hasSize(1),
+                        Matchers.hasItem(Matchers.hasProperty("executorService", Matchers.notNullValue()))));
+        Assert.assertThat(result.getTimeoutExecutorResults(),
+                Matchers.hasItem(
+                        Matchers.hasProperty("futures", Matchers.hasSize(1))));
     }
     
     @Test
     public void buildTwoThreadsUsingTheSameBuilder() {
         final ExecutorResult result = ThreadBuilder
             .newBuilder()
+            .setTimeout(1000)
             .setExecution(localRunnable)
             .startAndBuildOther()
+            .setTimeout(1000)
             .setExecution(localRunnable)
             .start();
         
@@ -630,7 +676,15 @@ public class ThreadBuilderTest {
         
         Mockito.verify(localRunnable, Mockito.times(2)).run();
         Assert.assertThat(result, Matchers.hasProperty("executorService", Matchers.notNullValue()));
-        Assert.assertThat(result, Matchers.hasProperty("futures", Matchers.hasSize(1)));
-        Assert.assertThat(result, Matchers.hasProperty("timeoutExecutorResult", Matchers.nullValue()));
+        Assert.assertThat(result, Matchers.hasProperty("futures", Matchers.hasSize(2)));
+        Assert.assertThat(result, Matchers.hasProperty("timeoutExecutorResults", Matchers.hasSize(2)));
+        Assert.assertThat(
+                result.getTimeoutExecutorResults(),
+                Matchers.allOf(
+                        Matchers.hasSize(2),
+                        Matchers.hasItem(Matchers.hasProperty("executorService", Matchers.notNullValue()))));
+        Assert.assertThat(result.getTimeoutExecutorResults(),
+                Matchers.hasItem(
+                        Matchers.hasProperty("futures", Matchers.hasSize(1))));
     }
 }
