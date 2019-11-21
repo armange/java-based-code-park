@@ -92,8 +92,9 @@ public class ThreadBuilder {
     }
     
     /**
-     * @param executor the {@link ScheduledCaughtExecutorService} from which the threads will be created.
+     * @param corePoolSize the {@link ScheduledCaughtExecutorService} pool size.
      * @return a new object to perform a thread creation.
+     * @see thread.ScheduledCaughtExecutorService#ScheduledCaughtExecutorService(int)
      */
     public static ThreadBuilder newBuilder(final int corePoolSize) {
         return new ThreadBuilder(corePoolSize);

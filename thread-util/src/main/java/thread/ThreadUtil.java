@@ -6,7 +6,7 @@ import java.net.URL;
 /**
  * Utilities to work with threads.
  * @author Diego Armange Costa
- * @since 2019-08-14 V1.0.0
+ * @since 2019-11-10 V1.0.0
  */
 public class ThreadUtil {
 
@@ -37,6 +37,13 @@ public class ThreadUtil {
         return Thread.currentThread().getContextClassLoader().getResourceAsStream(relativePath);
     }
     
+    /**
+     * @param relativePath the resource relative path.
+     * @return The URL found or null if not found.
+     * @see java.lang.ClassLoader.getResource(String)
+     * @see java.lang.Thread.getContextClassLoader()
+     * @see java.lang.Thread.currentThread()
+     */
     public static URL getCurrentThreadResource(final String relativePath) {
         return Thread.currentThread().getContextClassLoader().getResource(relativePath);
     }
