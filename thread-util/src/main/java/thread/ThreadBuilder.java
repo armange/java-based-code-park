@@ -5,9 +5,9 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -71,13 +71,17 @@ public class ThreadBuilder {
     private Optional<Consumer<Throwable>> uncaughtExceptionConsumer = Optional.empty();
     private Runnable execution;
     private ScheduledCaughtExecutorService executor;
+    private ExecutorResult executorResult;
     private boolean mayInterruptIfRunning;
     private boolean silentInterruption;
+    private final int corePoolSize;
 
-    private ThreadBuilder() {}
+    private ThreadBuilder() {
+        corePoolSize = 1;
+    }
     
-    private ThreadBuilder(final ScheduledCaughtExecutorService executor) {
-        this.executor = executor;
+    private ThreadBuilder(final int corePoolSize) {
+        this.corePoolSize = corePoolSize;
     }
 
     /**
@@ -91,8 +95,8 @@ public class ThreadBuilder {
      * @param executor the {@link ScheduledCaughtExecutorService} from which the threads will be created.
      * @return a new object to perform a thread creation.
      */
-    public static ThreadBuilder newBuilder(final ScheduledCaughtExecutorService executor) {
-        return new ThreadBuilder(executor);
+    public static ThreadBuilder newBuilder(final int corePoolSize) {
+        return new ThreadBuilder(corePoolSize);
     }
 
     /**
@@ -196,11 +200,39 @@ public class ThreadBuilder {
      * Starts the thread.
      * @return the executor service after starting thread.
      */
-    public ExecutorService start() {
+    public ExecutorResult start() {
+        createExecutorAndRunThread();
+
+        return executorResult;
+    }
+    
+    /**
+     * Starts the thread.
+     * @return the executor service after starting thread.
+     */
+    public ThreadBuilder startAndBuildOther() {
+        createExecutorAndRunThread();
+
+        return this;
+    }
+
+    private void createExecutorAndRunThread() {
         requireExecutionNonNull();
 
-        executor = new ScheduledCaughtExecutorService(2);
+        executor = new ScheduledCaughtExecutorService(corePoolSize, getThreadFactory());
+        
+        runThread();
 
+        afterExecuteConsumer.ifPresent(executor::addAfterExecuteConsumer);
+    }
+
+    private ThreadFactory getThreadFactory() {
+        return uncaughtExceptionConsumer
+                .map(ueh -> new CaughtExecutorThreadFactory((thread, throwable) -> ueh.accept(throwable)))
+                .orElse(new CaughtExecutorThreadFactory(null));
+    }
+
+    private void runThread() {
         if (noSchedule()) {
             runWithNoSchedule();
         } else if (onlyDelay()) {
@@ -218,10 +250,6 @@ public class ThreadBuilder {
         } else /* All */ {
             runWithAllTimesControls();
         }
-
-        afterExecuteConsumer.ifPresent(executor::addAfterExecuteConsumer);
-
-        return executor;
     }
 
     private void requireExecutionNonNull() {
@@ -260,12 +288,16 @@ public class ThreadBuilder {
         final Future<?> future = executor.schedule(execution, handleDelay(), TimeUnit.MILLISECONDS);
 
         executor.addAfterExecuteConsumer(handleException(future));
+        executorResult = new ExecutorResult(executor);
+        executorResult.getFutures().add(future);
     }
 
     private void runWithDelay() {
         final ScheduledFuture<?> future = executor.schedule(execution, handleDelay(), TimeUnit.MILLISECONDS);
 
         executor.addAfterExecuteConsumer(handleException(future));
+        executorResult = new ExecutorResult(executor);
+        executorResult.getFutures().add(future);
     }
 
     private void runWithTimeout() {
@@ -273,7 +305,10 @@ public class ThreadBuilder {
 
         executor.addAfterExecuteConsumer(handleException(future));
 
-        handleInterruption(future);
+        final ExecutorResult timeoutExecutorResult = handleInterruption(future);
+        
+        executorResult = new ExecutorResult(executor, timeoutExecutorResult);
+        executorResult.getFutures().add(future);
     }
 
     private void repeatWithInterval() {
@@ -281,6 +316,8 @@ public class ThreadBuilder {
                 interval.get().toMillis(), TimeUnit.MILLISECONDS);
 
         executor.addAfterExecuteConsumer(handleException(future));
+        executorResult = new ExecutorResult(executor);
+        executorResult.getFutures().add(future);
     }
 
     private void runWithDelayAndTimeout() {
@@ -288,7 +325,10 @@ public class ThreadBuilder {
 
         executor.addAfterExecuteConsumer(handleException(future));
 
-        handleInterruption(future);
+        final ExecutorResult timeoutExecutorResult = handleInterruption(future);
+        
+        executorResult = new ExecutorResult(executor, timeoutExecutorResult);
+        executorResult.getFutures().add(future);
     }
 
     private void runWithDelayAndInterval() {
@@ -296,6 +336,8 @@ public class ThreadBuilder {
                 interval.get().toMillis(), TimeUnit.MILLISECONDS);
 
         executor.addAfterExecuteConsumer(handleException(future));
+        executorResult = new ExecutorResult(executor);
+        executorResult.getFutures().add(future);
     }
 
     private void runWithTimeoutAndInterval() {
@@ -304,32 +346,38 @@ public class ThreadBuilder {
 
         executor.addAfterExecuteConsumer(handleException(future));
 
-        handleInterruption(future);
+        final ExecutorResult timeoutExecutorResult = handleInterruption(future);
+        
+        executorResult = new ExecutorResult(executor, timeoutExecutorResult);
+        executorResult.getFutures().add(future);
     }
 
     private void runWithAllTimesControls() {
         final ScheduledFuture<?> future = executor.scheduleAtFixedRate(execution, handleDelay(),
                 interval.get().toMillis(), TimeUnit.MILLISECONDS);
-
+        
         executor.addAfterExecuteConsumer(handleException(future));
 
-        handleInterruption(future);
+        final ExecutorResult timeoutExecutorResult = handleInterruption(future);
+        
+        executorResult = new ExecutorResult(executor, timeoutExecutorResult);
+        executorResult.getFutures().add(future);
     }
 
     private long handleDelay() {
+        final long localDelay = delay.orElse(Duration.ofMillis(0)).toMillis();
+        
         if (uncaughtExceptionConsumer.isPresent() || afterExecuteConsumer.isPresent()) {
-            final long localDelay = delay.orElse(Duration.ofMillis(0)).toMillis();
-
             return localDelay >= MINIMAL_REQUIRED_DELAY ? localDelay : localDelay + MINIMAL_REQUIRED_DELAY;
         } else {
-            return delay.orElse(Duration.ofMillis(0)).toMillis();
+            return localDelay;
         }
     }
 
     private BiConsumer<Runnable, Throwable> handleException(final Future<?> future) {
         return (a, b) -> {
             try {
-                future.get();
+                if (future.isDone()) future.get();
             } catch (final InterruptedException | ExecutionException | CancellationException e) {
                 if (isNotSilentOrIsExecutionException(e)) {
                     uncaughtExceptionConsumer.ifPresent(consumer -> consumer.accept(e));
@@ -343,7 +391,16 @@ public class ThreadBuilder {
                 || !(e instanceof CancellationException) && !(e instanceof InterruptedException);
     }
 
-    private void handleInterruption(final ScheduledFuture<?> future) {
+    private ExecutorResult handleInterruption(final ScheduledFuture<?> future) {
+        final ScheduledCaughtExecutorService executor = new ScheduledCaughtExecutorService(1);
+        
+        executor.addAfterExecuteConsumer(handleException(future));
         executor.schedule(() -> future.cancel(mayInterruptIfRunning), timeout.get().toMillis(), TimeUnit.MILLISECONDS);
+        
+        final ExecutorResult timeoutExecutorResult = new ExecutorResult(executor);
+        
+        timeoutExecutorResult.getFutures().add(future);
+        
+        return timeoutExecutorResult;
     }
 }
