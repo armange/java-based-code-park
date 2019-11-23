@@ -687,4 +687,24 @@ public class ThreadBuilderTest {
                 Matchers.hasItem(
                         Matchers.hasProperty("futures", Matchers.hasSize(1))));
     }
+    
+    @Test
+    public void cancelDelayBeforeExecution() {
+        final ExecutorResult result = ThreadBuilder
+            .newBuilder()
+            .setDelay(3000)
+            .setExecution(localRunnable)
+            .start();
+        
+        ThreadUtil.sleepUnchecked(1000);
+        
+        result.getExecutorService().shutdownNow();
+        
+        ThreadUtil.sleepUnchecked(3000);
+        
+        Mockito.verify(localRunnable, Mockito.times(0)).run();
+        Assert.assertThat(result, Matchers.hasProperty("executorService", Matchers.notNullValue()));
+        Assert.assertThat(result, Matchers.hasProperty("futures", Matchers.hasSize(1)));
+        Assert.assertThat(result, Matchers.hasProperty("timeoutExecutorResults", Matchers.hasSize(0)));
+    }
 }
