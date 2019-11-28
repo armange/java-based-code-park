@@ -1,0 +1,10 @@
+-classpath '/home/diego/git/java-based-code-park/thread-util/build/classes/java/main:/home/diego/git/java-based-code-park/thread-util/build/resources/main'
+-d '/home/diego/git/java-based-code-park/thread-util/build/docs/javadoc'
+-doctitle 'thread-util 0.0.1-SNAPSHOT API'
+-quiet 
+-windowtitle 'thread-util 0.0.1-SNAPSHOT API'
+'/home/diego/git/java-based-code-park/thread-util/src/main/java/thread/ExecutorResult.java'
+'/home/diego/git/java-based-code-park/thread-util/src/main/java/thread/ThreadBuilder.java'
+'/home/diego/git/java-based-code-park/thread-util/src/main/java/thread/ScheduledCaughtExecutorService.java'
+'/home/diego/git/java-based-code-park/thread-util/src/main/java/thread/CaughtExecutorThreadFactory.java'
+'/home/diego/git/java-based-code-park/thread-util/src/main/java/thread/ThreadUtil.java'

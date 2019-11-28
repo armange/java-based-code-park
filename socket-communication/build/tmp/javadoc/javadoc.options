@@ -1,0 +1,13 @@
+-classpath '/home/diego/git/java-based-code-park/socket-communication/build/classes/java/main:/home/diego/git/java-based-code-park/socket-communication/build/resources/main:/home/diego/.m2/repository/br/com/armange/codeless/codeless-core/0.0.1-SNAPSHOT/codeless-core-0.0.1-SNAPSHOT.jar:/home/diego/.gradle/caches/modules-2/files-2.1/com.google.guava/guava/23.0/c947004bb13d18182be60077ade044099e4f26f1/guava-23.0.jar:/home/diego/.gradle/caches/modules-2/files-2.1/org.javassist/javassist/3.24.0-GA/d7466fc2e3af7c023e95c510f06448ad29b225b3/javassist-3.24.0-GA.jar:/home/diego/.gradle/caches/modules-2/files-2.1/org.jboss.weld.se/weld-se/2.3.3.Final/a1fd4bf378a512ace526d85a51354d13a0c05d90/weld-se-2.3.3.Final.jar:/home/diego/.gradle/caches/modules-2/files-2.1/com.google.code.findbugs/jsr305/1.3.9/40719ea6961c0cb6afaeb6a921eaa1f6afd4cfdf/jsr305-1.3.9.jar:/home/diego/.gradle/caches/modules-2/files-2.1/com.google.errorprone/error_prone_annotations/2.0.18/5f65affce1684999e2f4024983835efc3504012e/error_prone_annotations-2.0.18.jar:/home/diego/.gradle/caches/modules-2/files-2.1/com.google.j2objc/j2objc-annotations/1.1/ed28ded51a8b1c6b112568def5f4b455e6809019/j2objc-annotations-1.1.jar:/home/diego/.gradle/caches/modules-2/files-2.1/org.codehaus.mojo/animal-sniffer-annotations/1.14/775b7e22fb10026eed3f86e8dc556dfafe35f2d5/animal-sniffer-annotations-1.14.jar'
+-d '/home/diego/git/java-based-code-park/socket-communication/build/docs/javadoc'
+-doctitle 'socket-communication 0.0.1-SNAPSHOT API'
+-quiet 
+-windowtitle 'socket-communication 0.0.1-SNAPSHOT API'
+'/home/diego/git/java-based-code-park/socket-communication/src/main/java/br/com/armange/socket/server/SocketServer.java'
+'/home/diego/git/java-based-code-park/socket-communication/src/main/java/br/com/armange/socket/client/ClientSocket.java'
+'/home/diego/git/java-based-code-park/socket-communication/src/main/java/br/com/armange/socket/poc/Poc.java'
+'/home/diego/git/java-based-code-park/socket-communication/src/main/java/br/com/armange/socket/communication/CommandCommunication.java'
+'/home/diego/git/java-based-code-park/socket-communication/src/main/java/br/com/armange/socket/communication/FileCommunication.java'
+'/home/diego/git/java-based-code-park/socket-communication/src/main/java/br/com/armange/socket/communication/StringCommunication.java'
+'/home/diego/git/java-based-code-park/socket-communication/src/main/java/br/com/armange/socket/communication/InstanceCommunication.java'
+'/home/diego/git/java-based-code-park/socket-communication/src/main/java/br/com/armange/socket/communication/BaseCommunication.java'
