@@ -19,6 +19,18 @@ jobs:
       run: echo "Test 1" > envFile.txt
     - name: Test Env 2
       run: cat envFile.txt
+    #Cache
+    - name: Cache Primes
+      id: cache-primes
+      uses: actions/cache@v1
+
+    - name: Generate Prime Numbers
+      if: steps.cache-primes.outputs.cache-hit != 'true'
+      run: echo "Cache = true"
+
+    - name: Use Prime Numbers
+      if: steps.cache-primes.outputs.cache-hit != 'false'
+      run: echo "Cache = false"
       
   one:
     runs-on: ubuntu-16.04
