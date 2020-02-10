@@ -18,8 +18,8 @@ jobs:
     - name: Test env 1
       env:
         TEST1: Test_1
-        run: echo "$TEST1"
+      run: echo "$TEST1"
     - name: Test Env 2
       env:
         TEST2: Test_2
-        run: echo "$TEST1" " " "$TEST2"
+      run: echo "$TEST1" " " "$TEST2"
