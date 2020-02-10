@@ -25,12 +25,13 @@ jobs:
       with:
         path: ~/.gradle/caches
         key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+    #Test cache
     - name: Test TRUE
-      if: steps.cache.outputs.cache-hit != 'true'
+      if: steps.cache.outputs.cache-hit == 'true'
       run: echo "Cache = true"
 
     - name: TEST FALSE
-      if: steps.cache-primes.outputs.cache-hit != 'false'
+      if: steps.cache-primes.outputs.cache-hit == 'false'
       run: echo "Cache = false"
       
   one:
