@@ -20,15 +20,16 @@ jobs:
     - name: Test Env 2
       run: cat envFile.txt
     #Cache
-    - name: Cache Primes
-      id: cache-primes
-      uses: actions/cache@v1
-
-    - name: Generate Prime Numbers
-      if: steps.cache-primes.outputs.cache-hit != 'true'
+    - uses: actions/cache@v1
+      id: cache
+      with:
+        path: ~/.gradle/caches
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
+    - name: Test TRUE
+      if: steps.cache.outputs.cache-hit != 'true'
       run: echo "Cache = true"
 
-    - name: Use Prime Numbers
+    - name: TEST FALSE
       if: steps.cache-primes.outputs.cache-hit != 'false'
       run: echo "Cache = false"
       
