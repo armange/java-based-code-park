@@ -15,15 +15,17 @@ jobs:
         java-version: 1.8
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
+    - name: Test
+      run: mkdir testGH
     - name: Test env 1
-      run: echo "Test 1 $GITHUB_RUN_ID" > envFile.txt
+      run: echo "Test 1 $GITHUB_RUN_ID" > testGH/envFile.txt
     - name: Test Env 2
-      run: cat envFile.txt
+      run: cat testGH/envFile.txt
     #Cache
     - uses: actions/cache@v1
       id: cache
       with:
-        path: /home/runner/work/java-based-code-park/java-based-code-park/envFile.txt
+        path: /home/runner/work/java-based-code-park/java-based-code-park/testGH
         key: ${{ runner.os }}-gradle-${{ hashFiles('envFile.txt') }}
 
     #Test cache
