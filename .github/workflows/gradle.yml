@@ -30,14 +30,14 @@ jobs:
     
     - id: testb3
       name: Test
-      if: action_state == 'red'
+      if: env.action_state == 'red'
       run: echo "$action_state"; echo "was red"
       
     #######################################################
     
     - id: testb4
       name: Test
-      if: action_state == 'yellow'
+      if: env.action_state == 'yellow'
       run: echo "$action_state"; echo "was yellow"
       
     #######################################################
