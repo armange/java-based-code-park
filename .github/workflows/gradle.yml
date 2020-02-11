@@ -35,7 +35,7 @@ jobs:
       
     #######################################################
     
-    - id: testb3
+    - id: testb4
       name: Test
       if: $action_state == 'yellow'
       run: echo "$action_state"; echo "was yellow"
