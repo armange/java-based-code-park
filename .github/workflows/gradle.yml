@@ -28,19 +28,19 @@ jobs:
       
     #######################################################
     
-    - id: testb
+    - id: testb2
       name: Test
       run: echo "::set-env name=action_state::yellow"
       
     #######################################################
     
-    - id: testb
+    - id: testb3
       name: Test
       run: echo "$action_state"
       
     #######################################################
     
-    - id: testb
+    - id: testb4
       name: Test
       run: echo "$ACTION_STATE"
       
