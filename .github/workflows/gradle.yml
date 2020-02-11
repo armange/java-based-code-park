@@ -23,7 +23,7 @@ jobs:
     - uses: actions/cache@v1
       id: cache
       with:
-        path: ~/.gradle/caches
+        path: envFile.txt
         key: ${{ runner.os }}-gradle-$GITHUB_RUN_ID
     #Test cache
     - name: Test TRUE
