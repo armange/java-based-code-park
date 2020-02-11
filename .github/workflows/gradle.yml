@@ -26,7 +26,7 @@ jobs:
       id: cache
       with:
         path: /home/runner/work/java-based-code-park/java-based-code-park/testGH
-        key: ${{ runner.os }}-gradle-${{ hashFiles('envFile.txt') }}
+        key: ${{ runner.os }}-gradle-${{ hashFiles('testGH/envFile.txt') }}
 
     #Test cache
     - name: Test TRUE
