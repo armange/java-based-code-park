@@ -42,6 +42,19 @@ jobs:
       
     #######################################################
     
+    - name: Test
+      run: ./gradlew :thread-util:build
+      continue-on-error: true
+      
+    #######################################################
+    
+    - id: testb5
+      name: Test 5
+      if: failure()
+      run: echo "$action_state"; echo "was yellow"
+      
+    #######################################################
+      
     - name: Dump steps context
       env:
         STEPS_CONTEXT: ${{ toJson(steps.testb) }}
