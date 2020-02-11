@@ -24,6 +24,7 @@ jobs:
     #Cache
     - uses: actions/cache@v1
       id: cache
+      name: cache
       with:
         path: /home/runner/work/java-based-code-park/java-based-code-park/testGH
         key: ${{ runner.os }}-gradle-1
@@ -31,6 +32,10 @@ jobs:
     #Test cache
     - name: Test TRUE
       if: steps.cache.outputs.cache-hit == true
+      run: echo "Cache = true"
+      
+    - name: Test TRUE 2
+      if: steps.Linux-gradle-1.outputs.cache-hit == true
       run: echo "Cache = true"
 
     - name: TEST FALSE
