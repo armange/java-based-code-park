@@ -24,7 +24,8 @@ jobs:
       id: cache
       with:
         path: ~/envFile.txt
-        key: ${{ runner.os }}-gradle-$GITHUB_RUN_ID
+        key: ${{ runner.os }}-gradle-${{ hashFiles('~/envFile.txt') }}
+
     #Test cache
     - name: Test TRUE
       if: steps.cache.outputs.cache-hit == true
