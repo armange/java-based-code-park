@@ -35,7 +35,7 @@ jobs:
       run: echo "Cache = true"
       
     - name: Test TRUE 2
-      if: steps.cache.outputs.cache-hit == "true"
+      if: steps.cache.outputs.cache-hit == 'true'
       run: echo "Cache = true"
 
     - name: TEST FALSE
