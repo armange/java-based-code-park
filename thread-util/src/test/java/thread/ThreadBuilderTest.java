@@ -6,6 +6,7 @@ import java.util.function.Consumer;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -13,6 +14,7 @@ import org.mockito.Mockito;
  * @author Diego Armange Costa
  * @since 2019-11-18 V1.0.0 (JDK 1.8)
  */
+@Ignore
 public class ThreadBuilderTest {
     private static final RuntimeException RUNTIME_EXCEPTION = new RuntimeException();
     
@@ -54,11 +56,11 @@ public class ThreadBuilderTest {
         }
     }
     
-    private LocalRunnable localRunnable = Mockito.spy(new LocalRunnable());
-    private LocalRunnableWithException localRunnableWithException = Mockito.spy(new LocalRunnableWithException());
-    private LazyRunnableWithException lazyRunnableWithException = Mockito.spy(new LazyRunnableWithException());
-    private ThrowableConsumer throwableConsumer = Mockito.spy(new ThrowableConsumer());
-    private AfterExecuteConsumer afterExecuteConsumer = Mockito.spy(new AfterExecuteConsumer());
+    private final LocalRunnable localRunnable = Mockito.spy(new LocalRunnable());
+    private final LocalRunnableWithException localRunnableWithException = Mockito.spy(new LocalRunnableWithException());
+    private final LazyRunnableWithException lazyRunnableWithException = Mockito.spy(new LazyRunnableWithException());
+    private final ThrowableConsumer throwableConsumer = Mockito.spy(new ThrowableConsumer());
+    private final AfterExecuteConsumer afterExecuteConsumer = Mockito.spy(new AfterExecuteConsumer());
     
     @Before
     public void beforeTests() {
