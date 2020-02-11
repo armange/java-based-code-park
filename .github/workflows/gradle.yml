@@ -27,7 +27,7 @@ jobs:
       name: cache
       with:
         path: /home/runner/work/java-based-code-park/java-based-code-park/testGH
-        key: ${{ runner.os }}-gradle-1
+        key: ${{ runner.os }}-gradle-2
 
     #Test cache
     - name: Test TRUE
