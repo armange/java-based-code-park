@@ -28,6 +28,30 @@ jobs:
       
     #######################################################
     
+    - id: testb
+      name: Test
+      run: echo "::set-env name=action_state::yellow"
+      
+    #######################################################
+    
+    - id: testb
+      name: Test
+      run: echo "$action_state"
+      
+    #######################################################
+    
+    - id: testb
+      name: Test
+      run: echo "$ACTION_STATE"
+      
+    #######################################################
+    
+    - id: testb
+      name: Test
+      run: echo "${{ action_state }}"
+      
+    #######################################################
+    
     - name: Dump steps context
       env:
         STEPS_CONTEXT: ${{ toJson(steps.testb) }}
@@ -35,9 +59,9 @@ jobs:
       
     #######################################################
     
-    - id: buildb
-      name: Build
-      run: ./gradlew :thread-util:build
+    #- id: buildb
+    #  name: Build
+    #  run: ./gradlew :thread-util:build
     
     #######################################################
     
