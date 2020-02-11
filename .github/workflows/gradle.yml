@@ -46,12 +46,6 @@ jobs:
       
     #######################################################
     
-    - id: testb
-      name: Test
-      run: echo "${{ action_state }}"
-      
-    #######################################################
-    
     - name: Dump steps context
       env:
         STEPS_CONTEXT: ${{ toJson(steps.testb) }}
