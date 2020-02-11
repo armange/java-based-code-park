@@ -22,27 +22,23 @@ jobs:
         
     #######################################################
     
-    - id: testb
-      name: Test
-      run: mkdir testGH
-      
-    #######################################################
-    
     - id: testb2
       name: Test
-      run: echo "::set-env name=action_state::yellow"
+      run: echo "::set-env name=action_state::yellow"; echo "::set-env name=action_state::red"
       
     #######################################################
     
     - id: testb3
       name: Test
-      run: echo "$action_state"
+      if: $action_state == 'red'
+      run: echo "$action_state"; echo "was red"
       
     #######################################################
     
-    - id: testb4
+    - id: testb3
       name: Test
-      run: echo "$ACTION_STATE"
+      if: $action_state == 'yellow'
+      run: echo "$action_state"; echo "was yellow"
       
     #######################################################
     
