@@ -16,15 +16,15 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Test env 1
-      run: echo "Test 1 $GITHUB_RUN_ID" > envFile.txt
+      run: echo "Test 1 $GITHUB_RUN_ID" > ~/envFile.txt
     - name: Test Env 2
-      run: cat envFile.txt
+      run: cat ~/envFile.txt
     #Cache
     - uses: actions/cache@v1
       id: cache
       with:
-        path: envFile.txt
-        key: ${{ runner.os }}-gradle-$GITHUB_RUN_ID
+        path: ~/envFile.txt
+        key: ${{ runner.os }}-gradle-${{ GITHUB_RUN_ID }}
     #Test cache
     - name: Test TRUE
       if: steps.cache.outputs.cache-hit == true
