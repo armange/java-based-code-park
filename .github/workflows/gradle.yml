@@ -30,7 +30,7 @@ jobs:
         key: ${{ runner.os }}-gradle-2
 
     #Test cache
-    - name: Test TRUE 2
+    - name: Test TRUE
       if: steps.cache.outputs.cache-hit == 'true'
       run: echo "Cache = true"
 
