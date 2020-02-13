@@ -1,6 +1,0 @@
-dependencies {
-    compile library.br_com_armange_codeless_codeless_core
-    
-    testCompile library.junit_junit
-    testCompile library.org_assertj_assertj_core
-}
